@@ -1,0 +1,31 @@
+# Claude долбоорунун жеке файлдары — GitHub'ка чыкпайт
+claude/
+
+# Жеке маалымат: окуучулардын аты-жөнү, упайлары ж.б.
+# GitHub ачык болгондуктан, чийки маалыматты эч качан жүктөбө.
+data/raw/
+data/private/
+*.csv
+*.xlsx
+*.xls
+*.db
+*.sqlite
+*.sqlite3
+# Портфолиого атайын даярдалган, анонимдештирилген үлгү маалымат:
+!data/sample/*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Тутум жана редактор
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
