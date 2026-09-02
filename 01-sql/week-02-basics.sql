@@ -19,13 +19,34 @@
 -- 1. SELECT жана WHERE
 -- --------------------------------------------
 
--- 1.1
--- Күтөм:
+-- 1.1  Find the title of each film
+-- Күтөм: 14 катар, 1 тилке
+SELECT title FROM movies;
+-- Чыкты: 14. Дал келди.
 
 
 
--- 1.2
--- Күтөм:
+-- 1.2 Find the director of each film
+-- Күтөм: 14 катар, 1 тилке
+SELECT director FROM movies;
+-- Чыкты: 14. Дал келди.
+
+-- 1.3 Find the title and director of each film
+-- Күтөм: 14 катар, 2 тилке
+SELECT title, director FROM movies;
+-- Чыкты: 14. Дал келди.
+
+
+-- 1.4 Find the title and year of each film
+-- Күтөм: 14 катар, 2 тилке
+SELECT title, year FROM movies;
+-- Чыкты: 14. Дал келди.
+
+
+-- 1.5 Find all the information about each film
+-- Күтөм: 14 катар, 5 тилке
+SELECT * FROM movies;
+-- Чыкты: 14. Дал келди.
 
 
 
@@ -55,9 +76,12 @@
 -- Жообуңду ушул жерге өз сөзүң менен жаз:
 --
 -- ЖООП:
---
---
+--  NULL дегени — белгисиз маани. Ноль да эмес, бош текст да эмес.
+-- Ошондуктан score = NULL деген салыштыруу UNKNOWN кайтарат.
+--  WHERE болсо TRUE болгон катарларды гана сактайт.
+-- UNKNOWN сакталбайт, ошондуктан жыйынтык дайыма бош чыгат.
 -- Туурасы: IS NULL / IS NOT NULL
+
 
 -- 4.1
 -- Күтөм:
