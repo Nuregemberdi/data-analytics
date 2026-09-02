@@ -64,7 +64,30 @@ SELECT * FROM movies WHERE year BETWEEN 2000 AND 2010;
 SELECT * FROM movies WHERE year NOT BETWEEN 2000 AND 2010;
 -- Чыкты: 6. ЖАҢЫЛДЫМ — 14-8=6 деп эсептесем болмок, болжолдоп отурдум.
 
+-- 1.9  Find all the Toy Story movies   [sqlbolt 3-сабак]
+-- Күтөм: 3 катар — Toy Story сериясында 3 фильм бар
+SELECT title FROM movies WHERE title LIKE 'Toy Story%';
+-- Чыкты: 3. Дал келди.
 
+-- 1.10  Find all the movies directed by John Lasseter   [sqlbolt 3-сабак]
+-- Күтөм: 3-4 катар — Lasseter Pixar'дын алгачкы фильмдерин тарткан
+SELECT title FROM movies WHERE director = 'John Lasseter';
+-- Чыкты: 5. ЖАҢЫЛДЫМ — 3-4 күттүм, 1ге көп чыкты.
+
+-- 1.11  Find all the movies (and director) not directed by John Lasseter   [sqlbolt 3-сабак]
+-- Күтөм: 9 катар — 14-5=9 деп эсептедим
+SELECT title, director FROM movies WHERE director != 'John Lasseter';
+-- Чыкты: 10. ЖАҢЫЛДЫМ — таблицада 14 эмес, 15 катар бар экен (WALL-G кошулуптур). 15-5=10.
+
+-- 1.12  Find all the WALL-* movies   [sqlbolt 3-сабак]
+-- Күтөм: 2 катар — мурунку натыйжада WALL-E жана WALL-G көрдүм
+SELECT title FROM movies WHERE title LIKE 'WALL-%';
+-- Чыкты: 2. Дал келди.
+
+-- 1.13  Toy Story фильмдерин IN аркылуу табуу (өз машыгуум)
+-- Күтөм: 3 катар — 1.9да LIKE менен 3 чыккан
+SELECT title FROM movies WHERE title IN ('Toy Story', 'Toy Story 2', 'Toy Story 3');
+-- Чыкты: 3. Дал келди.
 
 -- --------------------------------------------
 -- 2. ORDER BY жана LIMIT
