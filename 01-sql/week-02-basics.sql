@@ -99,6 +99,29 @@ SELECT title, year FROM movies
 LIMIT 5;
 -- Чыкты: 5 катар, 2 тилке. Дал келди.
 
+-- 2.2  List all directors of Pixar movies (alphabetically), without duplicates   [sqlbolt 5-сабак]
+-- Күтөм: сан жазган жокмун — 11 эң көбү деп гана билчүмүн
+SELECT DISTINCT director FROM movies ORDER BY director ASC;
+-- Чыкты: 7 режиссёр. 15 фильмге 7 режиссёр — орточо 2.1 фильмден.
+
+-- 2.3  List the last four Pixar movies released (ordered from most recent to least)   [sqlbolt 5-сабак]
+-- Күтөм: 4 катар, 2 тилке — тапшырмада "four" деп жазылган, SELECTте эки тилке атадым
+--         Кошумча божомол: эң жаңы фильм 2014-жылдыкы болушу мүмкүн
+SELECT title, year FROM movies ORDER BY year DESC LIMIT 4;
+-- Чыкты: 4 катар, 2 тилке. Дал келди.
+--         Кошумча: эң жаңысы 2013 чыкты — бир жылга жаңылдым.
+--         Таблица 2013тө токтойт, Pixar андан кийин да фильм чыгарган.
+
+-- 2.4  List the first five Pixar movies sorted alphabetically   [sqlbolt 5-сабак]
+-- Күтөм: 5 катар, 1 тилке — 15 фильмди алфавит боюнча иреттеп, биринчи 5өөнү алам
+SELECT title FROM movies ORDER BY title LIMIT 5;
+-- Чыкты: 5 катар, 1 тилке. Дал келди.
+
+-- 2.5  List the next five Pixar movies sorted alphabetically   [sqlbolt 5-сабак]
+-- Күтөм: 5 катар, 1 тилке — 2.4тун уландысы, алфавит боюнча 6-10-фильмдер
+SELECT title FROM movies ORDER BY title LIMIT 5 OFFSET 5;
+-- Чыкты: 5 катар, 1 тилке. Дал келди.
+
 
 
 -- --------------------------------------------
