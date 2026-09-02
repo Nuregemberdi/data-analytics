@@ -89,6 +89,34 @@ SELECT title FROM movies WHERE title LIKE 'WALL-%';
 SELECT title FROM movies WHERE title IN ('Toy Story', 'Toy Story 2', 'Toy Story 3');
 -- Чыкты: 3. Дал келди.
 
+-- 1.14  List all the Canadian cities and their populations   [sqlbolt 5-сабак]
+-- Күтөм: 1-3 катар, 2 тилке — 11 шаардын ичинде Канаданыкы аз болушу керек
+SELECT city, population FROM north_american_cities WHERE country = 'Canada';
+-- Чыкты: 2 катар. Дал келди — диапазонго кирди.
+--         Эскертүү: адегенде country тилкесин да алгам, бирок ал ашыкча —
+--         чыпкалагандан кийин анда бир эле маани калат.
+
+-- 1.15  Order all the cities in the United States by their latitude from north to south   [sqlbolt 5-сабак]
+-- Күтөм: 5 катар, 1 тилке — 11 шаардын 2өө Канададан, Мексиканыкы да бар деп ойлодум
+SELECT city FROM north_american_cities WHERE country = 'United States' ORDER BY latitude DESC;
+-- Чыкты: 6 катар, 1 тилке. ЖАҢЫЛДЫМ — 1ге көп чыкты.
+--         Мындан чыгарган жыйынтык: Мексиканыкы 11-2-6 = 3.
+
+-- 1.16  List all the cities west of Chicago, ordered from west to east   [sqlbolt 5-сабак]
+-- Күтөм: 6 катар, 1 тилке — таблицадан санадым, Чикагодон батышта 6 шаар бар
+SELECT city FROM north_american_cities WHERE longitude < -87.629798 ORDER BY longitude ASC;
+-- Чыкты: 6 катар, 1 тилке. Дал келди.
+
+-- 1.17  List the two largest cities in Mexico (by population)   [sqlbolt 5-сабак]
+-- Күтөм: 2 катар, 2 тилке — тапшырмада "two" деп жазылган, шаар жана калкы керек
+SELECT city, population FROM north_american_cities WHERE country = 'Mexico' ORDER BY population DESC LIMIT 2;
+-- Чыкты: 2 катар, 2 тилке. Дал келди.
+
+-- 1.18  List the third and fourth largest cities (by population) in the United States and their population   [sqlbolt 5-сабак]
+-- Күтөм: 2 катар, 2 тилке — калкы боюнча чоңдон кичинеге иреттеп, 2ни таштап 2ни алам
+SELECT city, population FROM north_american_cities WHERE country = 'United States' ORDER BY population DESC LIMIT 2 OFFSET 2;
+-- Чыкты: 2 катар, 2 тилке. Дал келди.
+
 -- --------------------------------------------
 -- 2. ORDER BY жана LIMIT
 -- --------------------------------------------
@@ -99,12 +127,12 @@ SELECT title, year FROM movies
 LIMIT 5;
 -- Чыкты: 5 катар, 2 тилке. Дал келди.
 
--- 2.2  List all directors of Pixar movies (alphabetically), without duplicates   [sqlbolt 5-сабак]
+-- 2.2  List all directors of Pixar movies (alphabetically), without duplicates   [sqlbolt 4-сабак]
 -- Күтөм: сан жазган жокмун — 11 эң көбү деп гана билчүмүн
 SELECT DISTINCT director FROM movies ORDER BY director ASC;
 -- Чыкты: 7 режиссёр. 15 фильмге 7 режиссёр — орточо 2.1 фильмден.
 
--- 2.3  List the last four Pixar movies released (ordered from most recent to least)   [sqlbolt 5-сабак]
+-- 2.3  List the last four Pixar movies released (ordered from most recent to least)   [sqlbolt 4-сабак]
 -- Күтөм: 4 катар, 2 тилке — тапшырмада "four" деп жазылган, SELECTте эки тилке атадым
 --         Кошумча божомол: эң жаңы фильм 2014-жылдыкы болушу мүмкүн
 SELECT title, year FROM movies ORDER BY year DESC LIMIT 4;
@@ -112,12 +140,12 @@ SELECT title, year FROM movies ORDER BY year DESC LIMIT 4;
 --         Кошумча: эң жаңысы 2013 чыкты — бир жылга жаңылдым.
 --         Таблица 2013тө токтойт, Pixar андан кийин да фильм чыгарган.
 
--- 2.4  List the first five Pixar movies sorted alphabetically   [sqlbolt 5-сабак]
+-- 2.4  List the first five Pixar movies sorted alphabetically   [sqlbolt 4-сабак]
 -- Күтөм: 5 катар, 1 тилке — 15 фильмди алфавит боюнча иреттеп, биринчи 5өөнү алам
 SELECT title FROM movies ORDER BY title LIMIT 5;
 -- Чыкты: 5 катар, 1 тилке. Дал келди.
 
--- 2.5  List the next five Pixar movies sorted alphabetically   [sqlbolt 5-сабак]
+-- 2.5  List the next five Pixar movies sorted alphabetically   [sqlbolt 4-сабак]
 -- Күтөм: 5 катар, 1 тилке — 2.4тун уландысы, алфавит боюнча 6-10-фильмдер
 SELECT title FROM movies ORDER BY title LIMIT 5 OFFSET 5;
 -- Чыкты: 5 катар, 1 тилке. Дал келди.
