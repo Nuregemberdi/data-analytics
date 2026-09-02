@@ -49,13 +49,32 @@ SELECT * FROM movies;
 -- Чыкты: 14. Дал келди.
 
 
+-- 1.6  Find the movie with a row id of 6   [sqlbolt 2-сабак]
+-- Күтөм: 1 катар, 5 тилке — id primary key, кайталанбайт
+SELECT * FROM movies WHERE id = 6;
+-- Чыкты: 1. Дал келди.
+
+-- 1.7  Find the movies released in the years between 2000 and 2010   [sqlbolt 2-сабак]
+-- Күтөм: 10 катар — 11 жыл, жылына бирден чыгат деп ойлодум
+SELECT * FROM movies WHERE year BETWEEN 2000 AND 2010;
+-- Чыкты: 8. ЖАҢЫЛДЫМ — 10 күттүм, 2ге аз чыкты.
+
+-- 1.8  Find the movies not released in the years between 2000 and 2010   [sqlbolt 2-сабак]
+-- Күтөм: 4 катар — Pixar'дын 20 жылдык тарыхынан болжолдодум
+SELECT * FROM movies WHERE year NOT BETWEEN 2000 AND 2010;
+-- Чыкты: 6. ЖАҢЫЛДЫМ — 14-8=6 деп эсептесем болмок, болжолдоп отурдум.
+
+
 
 -- --------------------------------------------
 -- 2. ORDER BY жана LIMIT
 -- --------------------------------------------
 
--- 2.1
--- Күтөм:
+-- 2.1  Find the first 5 Pixar movies and their release year   [sqlbolt 2-сабак]
+-- Күтөм: 5 катар, 2 тилке — LIMIT 5 бешөөнү кайтарат, SELECTте эки тилке атадым
+SELECT title, year FROM movies
+LIMIT 5;
+-- Чыкты: 5 катар, 2 тилке. Дал келди.
 
 
 
