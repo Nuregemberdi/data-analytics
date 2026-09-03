@@ -117,6 +117,49 @@ SELECT city, population FROM north_american_cities WHERE country = 'Mexico' ORDE
 SELECT city, population FROM north_american_cities WHERE country = 'United States' ORDER BY population DESC LIMIT 2 OFFSET 2;
 -- Чыкты: 2 катар, 2 тилке. Дал келди.
 
+-- 1.19  Find all North American cities with a population over 1,000,000   [өз суроом]
+-- Күтөм: "1-12 катар" деп жаздым — бул божомол эмес, бардык мүмкүн жоопту камтыйт
+SELECT city, population FROM north_american_cities WHERE population > 1000000 ORDER BY population DESC;
+-- Чыкты: 12 катар, 2 тилке.
+--         Эскертүү 1: адегенде таблицада 11 катар бар деп ойлогом — көз менен санагам,
+--         терезенин сыдырмасы бар экенин байкабаптырмын. Санды көз менен санабайт.
+--         Эскертүү 2: таблицада да 12 катар бар — чыпка эч кимди бөлгөн жок.
+--         Демек бардык шаардын калкы 1 млндон ашык. 1 млн бул жерде маанисиз чек.
+
+-- 1.20  Текшерүү: калкы 1 000 000дон аз шаар барбы?   [өз суроом]
+-- Күтөм: 0 катар — эгер баары 1 млндон ашык болсо, бирөө да чыкпашы керек
+SELECT city, population FROM north_american_cities WHERE population < 1000000;
+-- Чыкты: 0 катар. Божомол тастыкталды.
+
+-- 1.21  Find all movies longer than 90 minutes   [өз суроом]
+-- Күтөм: 10-13 катар — анимация адатта 95-120 мүнөт, демек көбү 90дон ашат
+SELECT title, length_minutes FROM movies WHERE length_minutes > 90;
+-- Чыкты: 13 катар. Дал келди (диапазонго кирди).
+--         Бирок 14төн 13ү өттү — 93%. Чек тизмени бөлгөн жок.
+
+-- 1.22  Медиананы табуу: 14 фильмдин 7 жана 8-орундагысы   [өз суроом]
+-- Күтөм: 2 катар — жуп сан болгондуктан ортодо эки орун турат
+SELECT title, length_minutes FROM movies ORDER BY length_minutes LIMIT 2 OFFSET 6;
+-- Чыкты: Toy Story 3 (103), WALL-E (104). Медиана = (103+104)/2 = 103.5
+
+-- 1.23  Медианадан узун фильмдер   [өз суроом]
+-- Күтөм: 7 катар — медиана тизмени тең бөлөт
+SELECT title, length_minutes FROM movies WHERE length_minutes > 103.5;
+-- Чыкты: 7 катар. Дал келди.
+
+-- 1.24  Шаарлардын калкы боюнча медианасын табуу   [өз суроом]
+-- Күтөм: 2 катар — 12 жуп сан, ортодо эки орун турат (6 жана 7)
+SELECT city, population FROM north_american_cities ORDER BY population LIMIT 2 OFFSET 5;
+-- Чыкты: Houston (2 195 914), Havana (2 106 146).
+--         Медиана = (2195914 + 2106146) / 2 = 2 151 030
+
+-- 1.25  Медианадан ири шаарлар   [өз суроом]
+-- Күтөм: 6 катар — медиана тизмени тең бөлөт, 12/2 = 6
+SELECT city, population FROM north_american_cities WHERE population > 2151030 ORDER BY population DESC;
+-- Чыкты: 6 катар. Дал келди.
+
+
+
 -- --------------------------------------------
 -- 2. ORDER BY жана LIMIT
 -- --------------------------------------------
