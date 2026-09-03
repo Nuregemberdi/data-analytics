@@ -12,6 +12,9 @@
 | duplicate | кайталанган сап | *I removed 12 duplicate rows before the analysis.* |
 | missing value | жетишпеген маани | *About 8% of the scores are missing values.* |
 
+| primary key | таблицанын тилкеси, ар бир катарда кайталанбайт, ошондуктан аны менен бир катарды так табууга болот | *The `id` column is the primary key, so no two rows share the same value.* |
+| median | тизмени өсүү же кемүү тартибинде иреттеп, ортодогусун алуу; жуп сан болсо ортодогу экөөнүн орточосу | *The median salary is 45,000 — half of the employees earn less, half earn more.* |
+| sanity check | жоопту тез текшерүү: «бул акылга сыябы?» деп өзүңдөн суроо | *Before reporting the number, I ran a quick sanity check.* |
 ---
 
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
