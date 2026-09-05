@@ -15,6 +15,22 @@
 | primary key | таблицанын тилкеси, ар бир катарда кайталанбайт, ошондуктан аны менен бир катарды так табууга болот | *The `id` column is the primary key, so no two rows share the same value.* |
 | median | тизмени өсүү же кемүү тартибинде иреттеп, ортодогусун алуу; жуп сан болсо ортодогу экөөнүн орточосу | *The median salary is 45,000 — half of the employees earn less, half earn more.* |
 | sanity check | жоопту тез текшерүү: «бул акылга сыябы?» деп өзүңдөн суроо | *Before reporting the number, I ran a quick sanity check.* |
+
+## 2026-09-04 / 09-05 · GROUP BY жумасы
+
+| English | Кыргызча түшүндүрмө (өз сөзүм менен) | Мисал сүйлөм (англисче) |
+|---|---|---|
+| alias | натыйжадагы мамычага берилген кыска ат, `AS` менен жазылат | *I used an alias to make the column name readable.* |
+| cardinality | тилкедеги ар түрдүү маанилердин саны. `COUNT(DISTINCT)` ушуну берет | *The `country` column has a cardinality of four.* |
+| silent failure | билдирүүсүз ката: программа иштейт, натыйжа чыгат, бирок ал жалган | *This is a silent failure — the query runs but the result is wrong.* |
+| normalization | ар кандай көлөмдөгү топторду салыштырууга жарактуу кылуу. `AVG = SUM / COUNT` | *Without normalization you cannot compare groups of different sizes.* |
+| generalizability | жыйынтык канчалык кеңири жайылтылат. Тандама кайдан алынса, ошол чөйрөгө гана тиешелүү | *The sample is limited to one studio, so generalizability is low.* |
+| derived column | таблицада жок, маалыматтан эсептеп чыгарылган мамыча | *The decade is a derived column, not stored in the table.* |
+| minimum sample size | ишеним үчүн керектүү эң аз байкоо саны. $n=1$ болсо орточо маанисиз | *We set a minimum sample size of five before reporting any average.* |
+| granularity | кесимдин майдалыгы. Тилке кошуу finer кылат, алып салуу coarser кылат | *Let's look at the data at a finer granularity.* |
+| variance | чачыранды: маанилер орточодон канчалык алыс жайгашканы | *High variance makes the average unstable.* |
+| range | башы менен аягынын аралыгы: `MAX − MIN` | *The range of film lengths is 39 minutes.* |
+
 ---
 
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
