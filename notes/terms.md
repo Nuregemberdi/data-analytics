@@ -31,6 +31,19 @@
 | variance | чачыранды: маанилер орточодон канчалык алыс жайгашканы | *High variance makes the average unstable.* |
 | range | башы менен аягынын аралыгы: `MAX − MIN` | *The range of film lengths is 39 minutes.* |
 
+## 2026-09-05 · COUNT жана NULL
+
+| English | Кыргызча түшүндүрмө (өз сөзүм менен) | Мисал сүйлөм (англисче) |
+|---|---|---|
+| clause | SQL сүйлөмүнүн бир бөлүгү. `WHERE`, `GROUP BY`, `HAVING` — ар бири clause | *Find the number of artists without a `HAVING` clause.* |
+| non-null | NULL эмес маани. `COUNT(тилке)` ушуларды гана санайт | *`COUNT(building)` returns the number of non-null values.* |
+| arbitrary | ыктыярдуу, эрежесиз тандалган. Топтолбогон тилке ушундай тандалат | *SQLite picks an arbitrary value, so the result is not reliable.* |
+| to derive | бар сандардан жаңы санды чыгаруу (жаңы маалымат албай) | *I derived the total from the average and the count.* |
+| total | жалпы сумма. Англисчеде "total" → `SUM`, "number of" → `COUNT` | *Find the total number of years employed by all engineers.* |
+
+**Айырма:** *the **total** number of years* → `SUM(years)`, ал эми *the **number** of employees* → `COUNT(*)`.
+Экөө тең "number" сөзүн колдонот, бирок башка агрегат керек.
+
 ---
 
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
