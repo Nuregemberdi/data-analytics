@@ -44,6 +44,24 @@
 **Айырма:** *the **total** number of years* → `SUM(years)`, ал эми *the **number** of employees* → `COUNT(*)`.
 Экөө тең "number" сөзүн колдонот, бирок башка агрегат керек.
 
+## 2026-09-06 · чачыранды, чек, атоо
+
+| English | Кыргызча түшүндүрмө (өз сөзүм менен) | Мисал сүйлөм (англисче) |
+|---|---|---|
+| spread | маанилердин бири-биринен канчалык алыс жайгашканы | *Two groups can share a mean but differ in spread.* |
+| threshold | чек, ченем. `HAVING`ке сөзсүз керек, маалыматтан тандалат | *I set a threshold of two years.* |
+| base rate | топтун негизги үлүшү. Салыштыруудан мурун каралат | *The base rate explains it: he directed five of the fourteen films.* |
+| robust | бекем — маалымат бир аз өзгөрсө да жыйынтык өзгөрбөйт | *The result is not robust: it depends on a third of a minute.* |
+| career span | карьеранын узундугу: `MAX(year) - MIN(year)` | *His career span is sixteen years.* |
+| to name a column | тилкеге ат берүү — ат эмнени ӨЛЧӨГӨНҮН айтышы керек | *Name it `length_range`, not `height_range`.* |
+
+**Эки эреже:**
+
+1. `range` эки санды гана колдонот (`MAX`, `MIN`), `variance` бардыгын колдонот.
+   Ошондуктан эки топтун `range`и бирдей болуп, `variance`и башка болушу мүмкүн.
+2. `snake_case` — SQL'де эки сөздүн ортосуна астын сызык: `total_minutes`,
+   `career_span`, `length_range`. Боштук койсо SQL аны бир ат деп окубайт.
+
 ---
 
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
