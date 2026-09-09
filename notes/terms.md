@@ -62,6 +62,68 @@
 2. `snake_case` — SQL'де эки сөздүн ортосуна астын сызык: `total_minutes`,
    `career_span`, `length_range`. Боштук койсо SQL аны бир ат деп окубайт.
 
+
+## 2026-09-07 / 09-08 · JOIN жумасы
+
+| English | Кыргызча түшүндүрмө (өз сөзүм менен) | Мисал сүйлөм (англисче) |
+|---|---|---|
+| foreign key | башка таблицага шилтеме кылган тилке. `primary key`тен айырмасы: кайталанат | *`student_id` is a foreign key referencing the students table.* |
+| fan-out | оң таблицада бир катарга бир нече дал келүү болгондо, сол таблицанын катары көбөйүп кетиши | *Watch out for fan-out: the join multiplied the rows.* |
+| Cartesian product | ачкычсыз JOIN: ар бир катар ар бир катар менен жупташат, $N \times M$ | *Without an `ON` clause you get a Cartesian product.* |
+| three-valued logic | SQL логикасы үч мааниге ээ: `TRUE`, `FALSE`, `UNKNOWN` | *SQL uses three-valued logic, so `NULL > 4` is unknown.* |
+| unknown | үчүнчү маани. `NULL` менен салыштыруунун жообу. `WHERE` аны калтырбайт | *The comparison returns unknown, so the row is filtered out.* |
+| observation window | маалымат камтыган убакыт аралыгы. `MIN`/`MAX` анын чегине жабышат | *The observation window covers only three months of 2012.* |
+| to preserve | сактап калуу. `LEFT JOIN` сол таблицанын катарларын preserve кылат | *A `LEFT JOIN` preserves every row from the left table.* |
+| to match | дал келүү. `ON` шарты дал келүүнү аныктайт | *Rows that do not match are dropped by an inner join.* |
+| placeholder record | чыныгы объектти билдирбеген жасалма катар (`memid = 0` — GUEST) | *`memid` zero is a placeholder record for guests, not a real member.* |
+
+**Үч эреже:**
+
+1. `ON`догу шарт JOIN учурунда иштейт жана `LEFT JOIN`ду сактайт.
+   `WHERE`деги шарт JOIN бүткөндөн кийин иштейт жана `LEFT JOIN`ду `INNER JOIN`го
+   айландырып коёт. Себеби: `NULL` менен салыштыруу `UNKNOWN` берет, ал эми
+   `WHERE` `TRUE` болгондорду гана калтырат.
+2. Агрегат бар → `GROUP BY` керек. Агрегат жок → `GROUP BY` зыян.
+3. `MIN`/`MAX` `observation window`дун чегине жакын болсо, ал чыныгы маани эмес,
+   чектин өзү болушу мүмкүн.
+
+**Жаңы сүйлөм үлгүлөрү (README үчүн):**
+
+- *The two tables are joined on `facid`.*
+- *Guest bookings (`memid = 0`) are excluded from the analysis.*
+- **Limitations:** *The data covers only July to September 2012, so the earliest
+  booking per member is bounded by the observation window rather than by the
+  member's actual first visit.*
+
+
+## 2026-09-09 · self join, подзапрос
+
+| English | Кыргызча түшүндүрмө (өз сөзүм менен) | Мисал сүйлөм (англисче) |
+|---|---|---|
+| self join | таблицанын өзүнө кошулушу. Бир таблица эки роль ойногондо | *Use a self join to list each member with their recommender.* |
+| subquery | query'нин ичиндеги query. Ичкиси биринчи иштейт | *The subquery returns the average salary.* |
+| inner query / outer query | ички query / тышкы query | *The inner query runs first and passes its result to the outer query.* |
+| scalar | бир гана маани кайтарган. `=`, `>` менен колдонулат | *`AVG()` returns a scalar value.* |
+| membership test | тизменин ичинде барбы деп текшерүү — `IN` ушуну кылат | *`IN` performs a membership test against the list.* |
+| fact table / dimension table | окуялар журналы / туруктуу тизме. Fact dimension'дарды байланыштырат | *`bookings` is the fact table; `members` and `facilities` are dimensions.* |
+| to chain joins | JOIN'дорду кетирүү — үч же андан көп таблица | *You can chain joins as long as each one has its own `ON` clause.* |
+| to collapse rows | катарларды бир катарга кысуу. `DISTINCT` жана `GROUP BY` ушуну кылат | *`DISTINCT` collapsed two different people into one row.* |
+
+**Үч эреже:**
+
+1. Ички query **бир** маани кайтарса — `=` `>` `<`. **Көп** маани кайтарса — `IN`.
+2. `self join`то тапшырма бир адамды сурап жатса, `SELECT`теги бардык тилке
+   **бир эле alias**тан болушу керек.
+3. `DISTINCT` кайталанууну жашырат, оңдобойт. Адегенде «эмне үчүн кайталанып
+   жатат?» деп сура.
+
+**Жаңы сүйлөм үлгүлөрү:**
+
+- *The query joins three tables through the bookings fact table.*
+- *I verified the subquery by running it on its own.*
+- **Limitations:** *Two members share the same name, so grouping by name rather
+  than by `memid` would merge them into a single row.*
+
 ---
 
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
