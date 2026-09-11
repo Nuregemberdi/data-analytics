@@ -697,3 +697,46 @@ ORDER BY surname;
 -- Подзапростун калган түрлөрү (NOT IN, коррелденген подзапрос)
 -- 11 маселе калды (19/30)
 -- UNION — жол картасында жок, кошумча
+
+
+-- ============================================
+-- 2026-09-09 (экинчи сессия) · NOT IN
+-- ============================================
+
+-- Механикасы: колдон жазылган тизме менен (мисал, эсепке кирбейт)
+SELECT facid, name
+FROM cd.facilities
+WHERE facid NOT IN (SELECT facid FROM cd.facilities WHERE name LIKE '%Tennis%');
+-- 6 катар: Badminton Court, Massage Room 1, Massage Room 2,
+--          Squash Court, Snooker Table, Pool Table.
+-- Ички query 0, 1, 3 кайтарат (Tennis Court 1, Tennis Court 2, Table Tennis).
+-- Эскертүү: LIKE '%Tennis%' Table Tennis'ти КАМТЫЙТ,
+-- ал эми LIKE 'Tennis%' камтыбайт — тузак ошол жерде.
+
+
+-- 20-тапшырма (ЭСЕПКЕ КИРБЕЙТ — калып көрсөтүлдү)
+-- Бир да брондоо жасабаган мүчөлөр, NOT IN менен.
+-- 8/30 тапшырмасынын (LEFT JOIN + IS NULL) жообу менен дал келди.
+SELECT
+    cd.members.firstname AS firstname,
+    cd.members.surname AS surname
+FROM cd.members
+WHERE memid NOT IN (SELECT memid FROM cd.bookings);
+--
+-- ЭКИ ШАРТ (эсте кармоо керек):
+-- 1) Подзапрос БИР ГАНА тилке кайтарат. SELECT * ката берет.
+-- 2) Эки жагы бир эле нерсени билдириши керек: memid — адам, facid — эмерек.
+--
+-- Жол-жолунда кетирилген каталар:
+--   (SELECT * FROM cd.bookings)      -> беш тилке, NOT IN бирди күтөт
+--   (SELECT * FROM cd.facilities)    -> таблица алмашып кетти, тапшырма брондоо жөнүндө
+--   (SELECT memid FROM cd.bookings)  -> туура
+
+
+-- ============================================
+-- КИЙИНКИ ТАПШЫРМА (жазыла элек)
+-- ============================================
+-- 21/30  Эч кимди сунуштабаган мүчөлөр.
+--        Тышкы query cd.members, подзапрос дагы cd.members,
+--        бирок recommendedby тилкесин кайтарат.
+--        Суроо: канча катар чыгат? Эмне үчүн?
