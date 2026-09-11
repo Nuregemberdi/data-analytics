@@ -126,6 +126,42 @@
 
 ---
 
+## 2026-09-11 · NULL логикасы, нормалдаштыруу, түр
+
+| Термин | Мааниси |
+|---|---|
+| `three-valued logic` | TRUE · FALSE · UNKNOWN — SQLдеги логиканын үч абалы |
+| `UNKNOWN` | `NULL` катышкан ар кандай салыштыруунун жообу |
+| `non-deterministic` | ар жолу башка натыйжа чыгышы мүмкүн, кепилдик жок |
+| `deterministic` | натыйжа ар дайым бирдей |
+| `tie-breaker` | теңдикти бузуучу экинчи ченем (`ORDER BY`дын экинчи тилкеси) |
+| `functional dependency` | `primary key` боюнча топтогондо башка тилкелер автоматтык аныкталат |
+| `COUNT(DISTINCT ...)` | канча **башка** маани бар — катарлардын санын эмес |
+| `integer division` | бүтүн ÷ бүтүн = бүтүн, ондугу кыркылат |
+| `type casting` | түрдү өзгөртүү: `::numeric`, `CAST(x AS numeric)` |
+| `normalization` | эки топту салыштыруу үчүн жалпы негизге бөлүү |
+| `rate` | ошондон чыккан сан: «бир мүчөгө канча брондоо» |
+| `sample size` (`n`) | тандоонун көлөмү — ченемдин жанында ар дайым турушу керек |
+| `testable hypothesis` | маалымат менен текшерүүгө боло турган божомол |
+| `falsified hypothesis` | текшерилип, жараксыз болуп чыккан божомол |
+
+**Эстен чыкпасын:**
+
+1. `NOT IN` ичинде `NULL` болсо — 0 катар, ката билдирүүсүз.
+2. Бөлүү жазган сайын: «эки жагы тең бүтүн санбы?»
+3. Ченем жалгыз турбайт — жанында `n`.
+4. Бир тилкенин ар кандай маанилери керек болсо — `OR`, `AND` эмес.
+
+**Жаңы сүйлөм үлгүлөрү:**
+
+- *The rate is normalized by the number of distinct members.*
+- *This hypothesis was falsified: both rooms have identical pricing.*
+- *Integer division truncated the result, so the ratio was understated.*
+- **Limitations:** *Massage Room 2 has only 27 bookings, so the rate is based on a
+  very small sample and is not stable.*
+
+---
+
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
 
 - *The goal of this analysis is to find out whether ...*

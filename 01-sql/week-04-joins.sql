@@ -733,10 +733,194 @@ WHERE memid NOT IN (SELECT memid FROM cd.bookings);
 --   (SELECT memid FROM cd.bookings)  -> туура
 
 
+
+
 -- ============================================
--- КИЙИНКИ ТАПШЫРМА (жазыла элек)
+-- 2026-09-11 · NOT IN + NULL тузагы
 -- ============================================
--- 21/30  Эч кимди сунуштабаган мүчөлөр.
---        Тышкы query cd.members, подзапрос дагы cd.members,
---        бирок recommendedby тилкесин кайтарат.
---        Суроо: канча катар чыгат? Эмне үчүн?
+
+-- 20/30  Эч кимди сунуштабаган мүчөлөр
+SELECT *
+FROM cd.members
+WHERE memid NOT IN (
+    SELECT DISTINCT recommendedby
+    FROM cd.members
+    WHERE recommendedby IS NOT NULL
+);
+-- 18 катар (ичинде memid = 0, GUEST).
+-- IS NOT NULL сабын өзүм коштум — тузак алдын ала айтылган эмес.
+
+
+-- ⚠️ ТУЗАК: ушул эле query, IS NOT NULL сабы жок.
+-- Жыйынтыгы 0 катар. Ката билдирүү ЧЫКПАЙТ — silent failure.
+-- SELECT * FROM cd.members
+-- WHERE memid NOT IN (SELECT recommendedby FROM cd.members);
+--
+-- ЭМНЕ ҮЧҮН — чынжыры:
+--   memid = 5, тизме (3, 7, NULL) болсун.
+--   NOT IN муну AND чынжырына ажыратат:
+--
+--     5 != 3     -> TRUE
+--     5 != 7     -> TRUE
+--     5 != NULL  -> UNKNOWN   (белгисиз сан 5 болуп калышы мүмкүн)
+--     ------------------------------------------
+--     TRUE AND TRUE AND UNKNOWN -> UNKNOWN
+--
+--   WHERE TRUE болгондорду ГАНА өткөрөт. UNKNOWN өтпөйт.
+--   Бул ар бир катарда кайталанат -> 0 катар.
+--
+-- UNKNOWN ЖУГУШТУУ: бир гана UNKNOWN бүт AND чынжырын UNKNOWN кылат.
+--
+-- ЭРЕЖЕ: NOT IN ичиндеги тилкеде NULL болушу мүмкүн болсо,
+--        ар дайым WHERE ... IS NOT NULL кош.
+--        IN'де бул тузак ЖОК — ал жерде NULL жөн гана дал келбейт.
+
+
+
+
+-- ============================================
+-- 2026-09-11 · 21-26 · COUNT(DISTINCT), нормалдаштыруу
+-- ============================================
+
+-- 21/30  Эң көп адам сунуштаган мүчө
+SELECT
+    m.firstname,
+    m.surname,
+    COUNT(r.memid) AS count
+FROM cd.members r
+JOIN cd.members m ON m.memid = r.recommendedby
+GROUP BY m.memid, m.firstname, m.surname;
+-- Darren Smith — 5.
+-- GROUP BY m.memid: эки Darren Smith бар, ат боюнча топтосок кошулуп калмак.
+-- ЭРЕЖЕ: топтоо primary key боюнча, көрсөтмө тилке боюнча эмес.
+-- firstname/surname GROUP BY'да турганы жооп үчүн эмес —
+-- SELECT'те турууга уруксат алуу үчүн (functional dependency).
+
+
+-- 22/30  Massage Room 1'ди эң көп брондогон 5 мүчө
+SELECT
+    m.firstname,
+    m.surname,
+    COUNT(b.memid) AS count
+FROM cd.members m
+INNER JOIN cd.bookings b ON m.memid = b.memid
+WHERE b.facid = 4 AND m.memid != 0
+GROUP BY m.memid, m.firstname, m.surname
+ORDER BY count DESC
+LIMIT 5;
+-- Жетелөөсүз жазылды.
+--
+-- ⚠️ ТУЗАК: 5 жана 6-орундун counту бирдей болсо, LIMIT 5 кимди тандайт?
+-- Жооп: non-deterministic — база кайсынысын биринчи жолуктурса, ошону.
+-- Чечими — tie-breaker:  ORDER BY count DESC, m.memid
+-- Tie-breaker УНИКАЛДУУ болушу керек. surname жарабайт: эки Darren Smith.
+
+
+-- 23/30  Ар бир эмерек боюнча канча БАШКА мүчө брондогон
+SELECT
+    f.name,
+    COUNT(DISTINCT b.memid) AS member_count
+FROM cd.bookings b
+INNER JOIN cd.facilities f ON b.facid = f.facid
+WHERE b.memid != 0
+GROUP BY f.facid
+ORDER BY member_count DESC;
+-- Pool Table 27 · Table Tennis 25 · Massage Room 1 24 · Badminton 24 ·
+-- Squash 24 · Tennis Court 1 23 · Snooker 22 · Tennis Court 2 21 ·
+-- Massage Room 2 12   <- башкалардан эки эсе аз
+--
+-- COUNT(b.memid)          -> катарларды санайт   (4-тапшырма)
+-- COUNT(DISTINCT b.memid) -> башка маанилерди     (ушул)
+-- SELECT DISTINCT'тен айырмасы: бир тилкенин ичинде иштейт, катар өчүрбөйт.
+
+
+-- 24/30  Божомолду текшерүү: баа айырмасы барбы?
+SELECT f.name, f.membercost, f.guestcost
+FROM cd.facilities f
+WHERE f.name = 'Massage Room 1' OR f.name = 'Massage Room 2';
+-- Экөө тең: membercost 35, guestcost 80. БИРДЕЙ.
+-- Баа божомолу ЖОККО ЧЫКТЫ (falsified hypothesis).
+-- Бул жеңилүү эмес: бир түшүндүрмө четке кагылды, тизме кыскарды.
+--
+-- Үч божомол айтылган: VIP · жаңы · тейлөө сапаты.
+-- Текшерилчүсү бирөө гана (testable hypothesis) — баа.
+-- «Тейлөө сапаты» базада таптакыр жок, эч бир query аны айта албайт.
+--
+-- ⚠️ Бул query'де адегенде агрегатсыз GROUP BY турган. Ал ашыкча:
+--    агрегат бар -> GROUP BY керек; агрегат жок -> GROUP BY да жок.
+
+
+-- 25/30  Эки бөлмө: брондоо саны ЖАНА мүчө саны бир query'де
+SELECT
+    f.name,
+    COUNT(b.bookid) AS bookid_count,
+    COUNT(DISTINCT b.memid) AS memid_count
+FROM cd.bookings b
+INNER JOIN cd.facilities f ON b.facid = f.facid
+WHERE (f.name = 'Massage Room 1' OR f.name = 'Massage Room 2')
+  AND b.memid != 0
+GROUP BY f.name;
+-- Massage Room 1 -> 421 брондоо, 24 мүчө
+-- Massage Room 2 ->  27 брондоо, 12 мүчө
+-- Мүчөлөр эки эсе, брондоолор ОН БЕШ эсе айырмаланат.
+--
+-- ⚠️ Бул жерде AND/OR катасы кетти:
+--    name = 'Massage Room 1' AND name = 'Massage Room 2'  -> 0 катар.
+--    Бир катардын name'и бирөө гана. Эки башка маани керек болсо — OR.
+--    Кашаа МИЛДЕТТҮҮ: AND, OR'го караганда күчтүүрөөк байланат.
+
+
+-- 26/30  Нормалдаштыруу: бир мүчөгө канча брондоо туура келет
+SELECT
+    f.name,
+    COUNT(b.bookid) AS bookid_count,
+    COUNT(DISTINCT b.memid) AS memid_count,
+    ROUND(COUNT(b.bookid)::numeric / COUNT(DISTINCT b.memid), 2) AS rate
+FROM cd.bookings b
+INNER JOIN cd.facilities f ON b.facid = f.facid
+WHERE b.memid != 0
+GROUP BY f.name
+ORDER BY rate DESC;
+--
+-- Pool Table      784  27  29.04
+-- Snooker Table   421  22  19.14
+-- Massage Room 1  421  24  17.54
+-- Table Tennis    385  25  15.40
+-- Badminton Court 344  24  14.33
+-- Tennis Court 1  308  23  13.39
+-- Tennis Court 2  276  21  13.14
+-- Squash Court    195  24   8.13
+-- Massage Room 2   27  12   2.25
+--
+-- ⚠️⚠️ INTEGER DIVISION — бүгүнкү эң чоң сабак.
+-- ::numeric жоксуз варианты 17.0 берген, а туурасы 17.54.
+-- count() БҮТҮН сан кайтарат. SQLде бүтүн / бүтүн = БҮТҮН.
+-- Ондугу тегеректелбейт, КЫРКЫЛАТ. ROUND'го 17.54 эмес, даяр 17 барат.
+-- Ката ROUND'то эмес — андан МУРУНКУ кадамда.
+-- Чечими: ::numeric же CAST(x AS numeric). Плюс ROUND(x, 2).
+-- Мен муну өзүм байкадым: «калдык жок, жана туура эмес тегеректеген».
+--
+-- НОРМАЛДАШТЫРУУ (normalization):
+--   421 vs 27      -> «кайсы эмерек көп иштейт?»      (популярдуулук)
+--   17.54 vs 2.25  -> «келгендер кайра келеби?»        (кармап калуу)
+--   Эки башка суроо. Түз салыштыруу жаңылыштырат, себеби топтордун
+--   ӨЛЧӨМҮ башка. Жалпы негизге бөлүү = бөлчөктөрдү жалпы бөлүмгө келтирүү.
+--
+-- SAMPLE SIZE — бир адам дагы 20 жолу брондосо:
+--   Massage Room 2:  2.25 -> 3.92   (+74%)
+--   Pool Table:     29.04 -> 29.78  (+2.5%)
+--   Кичине сандын үстүндөгү ченем ТУРУКСУЗ.
+--   ЭРЕЖЕ: ченемдин жанында ар дайым n турушу керек.
+
+
+-- ============================================
+-- КИЙИНКИ (27/30 дан баштайт, 4 маселе калды)
+-- ============================================
+-- Коррелденген подзапрос (correlated subquery) —
+--   ички query тышкысынын АР БИР катары үчүн кайра иштейт
+-- Подзапрос FROM'до — алгач AS менен ат берүү керек
+--
+-- Ачык калган суроо: Massage Room 2 эмне үчүн дээрлик колдонулбайт?
+--   Баа божомолу жокко чыкты. Калган текшерилчү божомол:
+--   бөлмө кийинчерээк ачылганбы? (биринчи брондоонун күнүн кара —
+--   бирок observation window 3 ай гана, жооп алсыз чыгат)
