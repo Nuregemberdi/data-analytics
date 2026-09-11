@@ -162,6 +162,57 @@
 
 ---
 
+## 2026-09-11 (кечки уландысы) · коррелденген подзапрос
+
+| Термин | Мааниси |
+|---|---|
+| `correlated subquery` | ички query тышкысынын тилкесин колдонот, ар бир катар үчүн кайра иштейт |
+| `uncorrelated subquery` | бир жолу иштейт, бир жооп берет, тышкысы жөнүндө билбейт |
+| байланыш сабы | `WHERE b2.facid = b.facid` — коррелденген подзапросто `GROUP BY`дын ордун ээлейт |
+
+**Эстен чыкпасын:**
+
+1. Коррелденген подзапросто **эки alias милдеттүү** (`b` жана `b2`).
+2. Тышкы query **тандабайт — чыпкалайт**. Ага агрегат да, `GROUP BY` да керек эмес.
+3. **Чыпка эки queryде тең** болушу керек, антпесе экөө эки башка жыйынды карайт.
+4. Байланыш тилкесин алмаштырсаң (`memid` → `facid`) query башка суроого жооп берет,
+   ката чыкпайт.
+5. `DISTINCT` — катарлар **көп** болгондо каралат. Катарлар **аз** болсо жардам бербейт.
+
+**Жаңы сүйлөм үлгүлөрү:**
+
+- *The subquery is correlated: it runs once per row of the outer query.*
+- *The correlation predicate defines the group, the way `GROUP BY` would.*
+- **Limitations:** *The filter was applied only in the outer query, so four
+  facilities dropped out of the result silently.*
+- *Nine members tie for the longest booking, so the result is not a single row.*
+
+---
+
+## 2026-09-11 (кечки уландысы 2) · derived table
+
+| Термин | Мааниси |
+|---|---|
+| `derived table` | `FROM`догу подзапрос жараткан убактылуу таблица |
+| `AS t` | ага берилген ат — PostgreSQL'де **милдеттүү** |
+| агрегаттын үстүнөн агрегат | `AVG(COUNT(...))` жазылбайт; `COUNT`ту `derived table`ка чыгарып, анан `AVG` |
+| `CTE` / `WITH` | 5-жуманын темасы: эсептөөнү бир жолу жазып, ат берип, кайра-кайра колдонуу |
+
+**Эстен чыкпасын:**
+
+1. `AS t` деген ат **тышкы queryде гана** жашайт. `WHERE`дин ичиндеги подзапрос аны
+   көрбөйт — ошондуктан эсептөө кайра жазылат. Бул `CTE`нин себеби.
+2. Бир эсептөө эки жерде жазылса — бирин оңдоп экинчисин унутуу коркунучу бар,
+   жана ката чыкпайт.
+
+**Жаңы сүйлөм үлгүлөрү:**
+
+- *The subquery in the FROM clause produces a derived table, aliased as `t`.*
+- *You cannot nest aggregates directly, so the counts are computed first.*
+- *A CTE would let me write this calculation once instead of twice.*
+
+---
+
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
 
 - *The goal of this analysis is to find out whether ...*
