@@ -213,6 +213,32 @@
 
 ---
 
+## 2026-09-13 · CROSS JOIN жана бир кесиптик эреже
+
+| Термин | Мааниси |
+|---|---|
+| `CROSS JOIN` | `Cartesian product`тун SQLдеги аты. `ON` шарты жок — ар бир катар ар бир катар менен жупташат |
+
+`CROSS JOIN` коопсуз болгон жалгыз учур: оң жагында **бир гана катар** турса
+(мисалы бир сан — орточо маани). Ошондо ал санды ар бир катарга жабыштырат,
+катарлардын саны өзгөрбөйт.
+
+**Кесиптик эреже (2026-09-13):**
+
+> **Түшүндүрө албаган сапты кодуңда калтырба.**
+
+Теория окуу, документация кароо — ката эмес, күнүмдүк иш. Тыюу салынганы даяр жоопту
+көчүрүү. Бирок кодго кирген ар бир сапты оозеки түшүндүрө алышың керек — маекте так
+ошол сап жөнүндө сурашат.
+
+**Жаңы сүйлөм үлгүлөрү:**
+
+- *A CROSS JOIN has no ON clause: every row on the left is paired with every row on the right.*
+- *It is safe here because the right-hand side returns exactly one row.*
+- *I replaced the construct I could not explain with one I understood.*
+
+---
+
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
 
 - *The goal of this analysis is to find out whether ...*
