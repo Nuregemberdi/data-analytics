@@ -239,6 +239,51 @@
 
 ---
 
+## 2026-09-14 · CTE
+
+| English | Кыргызча түшүндүрмө (өз сөзүм менен) | Мисал сүйлөм (англисче) |
+|---|---|---|
+| `Common Table Expression` (`CTE`) | `WITH` менен ат берилген убактылуу натыйжа. Математикадагы «белгилейли: S = …» дегендей | *I used a CTE to avoid repeating the same subquery twice.* |
+| `named result set` | «аты бар натыйжа» — `CTE`нин так аныктамасы | *A CTE is simply a named result set that lives for one query.* |
+| `result set` | query кайтарган катарлардын жыйындысы | *The result set contains nine rows, one per facility.* |
+| `per` (префикс) | «ар бирине». `per_member`, `per_facility` — ат коюудагы стандарт | *The CTE `bookings_per_facility` counts bookings per facility.* |
+
+**Эсте калсын:** `CTE`нин аргументи жок. Ал `S = 2+3+7` сыяктуу белгилөө,
+`f(x) = x + 3` сыяктуу функция эмес. Бир жолу эсептелип, натыйжасы даяр турат.
+
+**Өз формулировкам:** «`WITH` таасири астында агрегат касиетин жоготуп тилке
+болуп калды». Толук чынжыр: `GROUP BY` бүткөндөн кийин **агрегат → тилке**,
+**топ → катар**, ошондуктан сыртында `HAVING` эмес, `WHERE` жетиштүү.
+
+---
+
+## 2026-09-15 · үлүш, NULL толтуруу, атоо
+
+| English | Кыргызча түшүндүрмө (өз сөзүм менен) | Мисал сүйлөм (англисче) |
+|---|---|---|
+| `facility` | клубдун корту, бөлмөсү, жабдуусу. **`furniture` = мебель — башка сөз!** | *Each facility has a member cost and a guest cost.* |
+| `share` | үлүш: бөлүктүн бүтүнгө катышы. Чийки сандан айырмаланат | *Massage Room 2 has the highest guest share, 76 percent.* |
+| `COALESCE` | «эгер `NULL` турса, ордуна муну кой». `COALESCE(x, 0)` | *I wrapped the guest count in `COALESCE` so the share is zero, not null.* |
+| `to depend on` | таянуу, көз каранды болуу | *Two facilities depend on guests more than on members.* |
+| `to rely on` | ошол эле маани, кесиптик текстте көбүрөөк кездешет | *The squash court relies on guest bookings.* |
+
+**Эки кесиптик эреже, бүгүн үйрөндүм:**
+
+1. **Санды айтканда чыпкасын кошо айт.** «784 брондоо» эмес, «784 — мүчөлөрдүн
+   брондоолору». Чыпканы айтпасаң, уккан адам башка санды элестетет.
+2. **`alias` эмнени өлчөгөнүн айтышы керек.** `as a` эмес, `as guest_share`.
+   Алты айдан кийин кодуңду өзүң окуйсуң.
+
+**`COALESCE` тууралуу тузак:** ал тилке колдонулган **ар бир жерге** коюлушу керек.
+Менин кодумда үч жер бар эле — көрсөтүлүүчү тилке, бөлүнүүчү, бөлүүчүнүн ичи.
+Бирөөн унутсам, `NULL` ошол жолдон өтүп кетмек.
+
+**`LEFT JOIN` менен `COALESCE` бир маселенин эки жарымы:**
+`LEFT JOIN` катарды сактайт, `COALESCE` ошол катардагы бош клетканы толтурат.
+Экөөнүн бири жок болсо, натыйжа дагы деле бузук.
+
+---
+
 ## Кесиптик сүйлөм үлгүлөрү (README жана иш маеги үчүн)
 
 - *The goal of this analysis is to find out whether ...*
